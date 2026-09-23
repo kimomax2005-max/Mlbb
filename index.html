@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#05070d">
+<title>CYBER KING — MLBB Marketplace</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,sans-serif;
+  background:#04060b;color:#f5f8ff;min-height:100vh;
+  background-image:
+    radial-gradient(circle at 10% 0%,rgba(0,234,255,.15),transparent 35%),
+    radial-gradient(circle at 90% 5%,rgba(139,92,255,.15),transparent 35%);
+}
+.container{max-width:1100px;margin:0 auto;padding:0 14px}
+header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(4,6,11,.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:14px 0;
+}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{font-weight:900;letter-spacing:.5px;font-size:15px;display:flex;gap:10px;align-items:center}
+.logoMark{
+  width:38px;height:38px;border-radius:12px;
+  background:linear-gradient(135deg,#00eaff,#8b5cff);
+  display:grid;place-items:center;color:#021017;font-weight:1000;
+}
+button{cursor:pointer;border:0;font:inherit}
+.btn{
+  padding:10px 14px;border-radius:11px;
+  background:rgba(255,255,255,.06);color:#fff;
+  border:1px solid rgba(255,255,255,.1);font-size:13px;font-weight:600;
+}
+.primary{
+  background:linear-gradient(135deg,#00eaff,#9a7cff);
+  color:#021017;font-weight:900;
+}
+.hero{padding:50px 0 30px;text-align:center}
+h1{
+  font-size:clamp(36px,7vw,72px);line-height:1;
+  background:linear-gradient(100deg,#fff,#00eaff,#8b5cff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:14px;
+}
+.hero p{color:#98a6b8;max-width:520px;margin:0 auto;line-height:1.7}
+.section{padding:25px 0}
+.sectionHead{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;gap:10px}
+.sectionHead h2{font-size:22px}
+.sectionHead span{color:#748195;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card{
+  border-radius:16px;overflow:hidden;
+  background:rgba(13,20,32,.55);
+  border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(20px);
+  transition:.2s;
+}
+.card:hover{transform:translateY(-3px);border-color:rgba(0,234,255,.4)}
+.thumb{
+  height:130px;display:grid;place-items:center;font-size:40px;
+  background:radial-gradient(circle at 40% 40%,rgba(0,234,255,.15),transparent 40%),
+    linear-gradient(135deg,rgba(0,234,255,.08),rgba(139,92,255,.12));
+  position:relative;
+}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;top:8px;left:8px;font-size:9px;font-weight:900;color:#00eaff;background:rgba(2,8,15,.75);padding:4px 7px;border-radius:99px;letter-spacing:.5px}
+.body{padding:12px}
+.body h3{font-size:13px;margin-bottom:5px;line-height:1.3}
+.meta{color:#8190a3;font-size:10px;display:flex;gap:6px;flex-wrap:wrap}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:11px;gap:6px}
+.foot strong{color:#00eaff;font-size:13px}
+.buy{
+  padding:7px 10px;border-radius:8px;font-size:11px;font-weight:800;
+  background:rgba(0,234,255,.08);color:#8af5ff;
+  border:1px solid rgba(0,234,255,.2);
+}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.toolbar input,.toolbar select{
+  background:rgba(5,10,18,.55);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:10px;color:#fff;font-size:13px;outline:none;
+}
+.toolbar input{flex:1;min-width:180px}
+.toolbar input:focus,.toolbar select:focus{border-color:rgba(0,234,255,.5)}
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;
+  display:none;align-items:center;justify-content:center;padding:14px;
+  backdrop-filter:blur(10px);
+}
+.modal.open{display:flex}
+.modalBox{
+  width:min(500px,100%);max-height:88vh;overflow:auto;
+  background:rgba(8,13,22,.95);border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:20px;
+}
+.modalBox h2{margin-bottom:14px;font-size:19px}
+.field{
+  width:100%;padding:11px;margin-bottom:9px;
+  background:rgba(5,10,18,.55);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;color:#fff;font-size:13px;outline:none;
+}
+.field:focus{border-color:rgba(0,234,255,.5)}
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);
+  background:rgba(7,14,23,.95);padding:12px 18px;border-radius:12px;
+  border:1px solid rgba(0,234,255,.3);font-size:13px;font-weight:600;
+  opacity:0;pointer-events:none;transition:.25s;z-index:200;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.closeBtn{float:right;font-size:24px;background:none;color:#94a1b3;padding:0 6px}
+.empty{text-align:center;padding:30px;color:#78869a;grid-column:1/-1;font-size:13px}
+footer{text-align:center;padding:40px 14px;color:#5f6b7d;font-size:11px;border-top:1px solid rgba(255,255,255,.06);margin-top:40px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo"><span class="logoMark">CK</span> CYBER KING</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" onclick="openTrack()">📦 Track</button>
+      <button class="btn primary" onclick="openAdmin()">⚙ Admin</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero container">
+  <h1>LEVEL UP YOUR GAME</h1>
+  <p>MLBB Diamonds နဲ့ Account များကို လွယ်ကူစွာ ဝယ်ယူနိုင်သည်။</p>
+</section>
+
+<section class="section container">
+  <div class="sectionHead"><h2>💎 Diamonds</h2><span id="pCount"></span></div>
+  <div class="grid" id="diamondGrid"></div>
+</section>
+
+<section class="section container">
+  <div class="sectionHead"><h2>👤 Accounts</h2><span id="aCount"></span></div>
+  <div class="toolbar">
+    <input id="search" placeholder="Search accounts..." oninput="renderAccounts()">
+    <select id="rankFilter" onchange="renderAccounts()">
+      <option value="">All Ranks</option>
+      <option>Mythic</option>
+      <option>Mythical Honor</option>
+      <option>Mythical Glory</option>
+      <option>Mythical Immortal</option>
+    </select>
+  </div>
+  <div class="grid" id="accountGrid"></div>
+</section>
+
+<footer>© 2026 CYBER KING • Independent marketplace</footer>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modalBox" id="modalContent"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const money = n => 'MMK ' + Number(n||0).toLocaleString();
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+let products = [], accounts = [], cart = [];
+
+let toastTimer;
+function toast(text){
+  const el = $('toast');
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+async function loadData(){
+  try {
+    products = await (await fetch('/api/products')).json();
+    accounts = await (await fetch('/api/accounts')).json();
+    renderProducts();
+    renderAccounts();
+  } catch(err){ toast('Load failed'); }
+}
+
+function renderProducts(){
+  $('pCount').textContent = products.length + ' packages';
+  $('diamondGrid').innerHTML = products.map(p => `
+    <article class="card">
+      <div class="thumb"><span class="tag">DIAMOND</span>${esc(p.icon||'💎')}</div>
+      <div class="body">
+        <h3>${esc(p.name)}</h3>
+        <div class="meta">
+          <span>${esc(p.meta||'')}</span>
+          ${p.bonus ? `<span style="color:#35e58c">${esc(p.bonus)}</span>` : ''}
+        </div>
+        <div class="foot">
+          <strong>${money(p.price)}</strong>
+          <button class="buy" onclick='addCart(${JSON.stringify(p).replace(/'/g,"&#39;")})'>ADD</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function renderAccounts(){
+  const q = ($('search').value||'').toLowerCase();
+  const r = $('rankFilter').value;
+  const filtered = accounts.filter(a => {
+    if(r && a.rank !== r) return false;
+    if(q && !(a.name+a.rank+a.tag).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  $('aCount').textContent = filtered.length + ' listings';
+  if(!filtered.length){
+    $('accountGrid').innerHTML = '<div class="empty">No accounts found.</div>';
+    return;
+  }
+  $('accountGrid').innerHTML = filtered.map(a => `
+    <article class="card">
+      <div class="thumb">
+        <span class="tag">${esc(a.tag||'PRO')}</span>
+        ${a.image ? `<img src="${esc(a.image)}">` : '👤'}
+      </div>
+      <div class="body">
+        <h3>${esc(a.name)}</h3>
+        <div class="meta">
+          <span>🏆 ${esc(a.rank)}</span>
+          <span>🎨 ${a.skins} skins</span>
+        </div>
+        <div class="foot">
+          <strong>${money(a.price)}</strong>
+          <button class="buy" onclick='addCart(${JSON.stringify({
+            id:'acc-'+a.id, name:a.name, price:a.price, meta:a.rank+' • '+a.skins+' skins'
+          }).replace(/'/g,"&#39;")})'>BUY</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function addCart(item){
+  const found = cart.find(x => x.id === item.id);
+  if(found) found.qty++;
+  else cart.push({ ...item, qty:1 });
+  toast('Cart: ' + cart.reduce((s,x)=>s+x.qty,0) + ' items');
+}
+
+function openModal(html){ $('modalContent').innerHTML = html; $('modal').classList.add('open'); }
+function closeModal(){ $('modal').classList.remove('open'); }
+
+function openTrack(){
+  const last = localStorage.getItem('ck_last') || '';
+  openModal(`
+    <button class="closeBtn" onclick="closeModal()">×</button>
+    <h2>📦 Track Order</h2>
+    <input class="field" id="tid" placeholder="Order ID" value="${esc(last)}">
+    <button class="btn primary" style="width:100%" onclick="track()">Track</button>
+    <div id="tres" style="margin-top:14px"></div>
+  `);
+}
+
+async function track(){
+  const id = $('tid').value.trim();
+  if(!id) return toast('Enter Order ID');
+  const res = await fetch('/api/orders/' + id);
+  if(!res.ok){ $('tres').innerHTML = '<div class="empty">Not found</div>'; return; }
+  const o = await res.json();
+  $('tres').innerHTML = `
+    <div style="padding:12px;border-radius:12px;background:rgba(0,234,255,.06);border:1px solid rgba(0,234,255,.2)">
+      <b style="color:#00eaff">${esc(o.id)}</b><br>
+      Status: <b>${esc(o.status)}</b><br>
+      Total: <b>${money(o.total)}</b>
+    </div>
+  `;
+}
+
+function openAdmin(){
+  openModal(`
+    <button class="closeBtn" onclick="closeModal()">×</button>
+    <h2>⚙ Admin</h2>
+    <input class="field" id="apwd" type="password" placeholder="Admin password">
+    <button class="btn primary" style="width:100%" onclick="adminLogin()">Login</button>
+    <div id="aerr" style="color:#ff5577;font-size:12px;margin-top:8px"></div>
+    <p style="color:#78869a;font-size:11px;margin-top:12px">Password: admin123</p>
+  `);
+}
+
+async function adminLogin(){
+  const password = $('apwd').value;
+  const res = await fetch('/api/admin/login', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ password })
+  });
+  if(!res.ok){ $('aerr').textContent = 'Wrong password'; return; }
+  openAdminPanel();
+}
+
+async function openAdminPanel(){
+  const data = await (await fetch('/api/admin/data')).json();
+  openModal(`
+    <button class="closeBtn" onclick="closeModal()">×</button>
+    <h2>⚙ Admin Panel</h2>
+
+    <h3 style="margin:14px 0 8px;font-size:14px">Add Account</h3>
+    <input class="field" id="nName" placeholder="Name">
+    <input class="field" id="nPrice" type="number" placeholder="Price (MMK)">
+    <select class="field" id="nRank">
+      <option>Mythic</option>
+      <option>Mythical Honor</option>
+      <option>Mythical Glory</option>
+      <option>Mythical Immortal</option>
+    </select>
+    <input class="field" id="nSkins" type="number" placeholder="Skins">
+    <input class="field" id="nTag" placeholder="Tag (RARE, HOT...)">
+    <button class="btn primary" style="width:100%" onclick="addAccount()">Add</button>
+
+    <h3 style="margin:18px 0 8px;font-size:14px">Accounts (${data.accounts.length})</h3>
+    <div>
+      ${data.accounts.map(a => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px;border-radius:10px;background:rgba(255,255,255,.03);margin-bottom:6px;gap:10px">
+          <div style="min-width:0;flex:1">
+            <b style="font-size:12px;display:block">${esc(a.name)}</b>
+            <small style="color:#8996a8;font-size:10px">${money(a.price)} • ${esc(a.rank)}</small>
+          </div>
+          <button class="buy" onclick="delAccount(${a.id})">×</button>
+        </div>
+      `).join('')}
+    </div>
+
+    <h3 style="margin:18px 0 8px;font-size:14px">Orders (${data.orders.length})</h3>
+    <div>
+      ${data.orders.length ? data.orders.map(o => `
+        <div style="padding:10px;border-radius:10px;background:rgba(255,255,255,.03);margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;gap:8px;font-size:11px">
+            <b style="color:#00eaff">${esc(o.id)}</b>
+            <span>${esc(o.status)}</span>
+          </div>
+          <small style="color:#8996a8">${money(o.total)} • ${esc(o.buyer||'Guest')}</small>
+          <div style="display:flex;gap:5px;margin-top:6px">
+            <button class="buy" onclick="setStatus('${esc(o.id)}','Pending')">Pending</button>
+            <button class="buy" onclick="setStatus('${esc(o.id)}','Processing')">Processing</button>
+            <button class="buy" onclick="setStatus('${esc(o.id)}','Completed')">Done</button>
+          </div>
+        </div>
+      `).join('') : '<div class="empty">No orders</div>'}
+    </div>
+  `);
+}
+
+async function addAccount(){
+  const name = $('nName').value.trim();
+  const price = Number($('nPrice').value);
+  if(!name || !price) return toast('Fill name and price');
+  await fetch('/api/admin/accounts', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({
+      name, price,
+      rank: $('nRank').value,
+      skins: Number($('nSkins').value)||0,
+      tag: ($('nTag').value||'PRO').toUpperCase(),
+      desc: '', image: ''
+    })
+  });
+  toast('Account added ✓');
+  await loadData();
+  openAdminPanel();
+}
+
+async function delAccount(id){
+  if(!confirm('Delete?')) return;
+  await fetch('/api/admin/accounts/' + id, { method:'DELETE' });
+  toast('Deleted');
+  await loadData();
+  openAdminPanel();
+}
+
+async function setStatus(id, status){
+  await fetch('/api/admin/orders/' + id, {
+    method:'PATCH',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ status })
+  });
+  toast('Updated');
+  openAdminPanel();
+}
+
+async function checkout(){
+  if(!cart.length) return toast('Cart empty');
+  const name = prompt('Your name:');
+  if(!name) return;
+  const contact = prompt('Telegram username:');
+  if(!contact) return;
+
+  const total = cart.reduce((s,x)=>s + x.price*x.qty, 0);
+  const res = await fetch('/api/orders', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ buyer:name, contact, items:cart, total })
+  });
+  const data = await res.json();
+  if(data.ok){
+    localStorage.setItem('ck_last', data.orderId);
+    cart = [];
+    openModal(`
+      <div style="text-align:center;padding:20px">
+        <div style="font-size:44px;color:#35e58c">✓</div>
+        <h2 style="margin:10px 0">Order Created</h2>
+        <p style="color:#8290a2;font-size:12px">Order ID</p>
+        <h2 style="color:#00eaff;font-family:monospace;letter-spacing:1px">${esc(data.orderId)}</h2>
+        <button class="btn primary" style="width:100%;margin-top:14px" onclick="closeModal()">OK</button>
+      </div>
+    `);
+  }
+}
+
+setInterval(() => {
+  const total = cart.reduce((s,x)=>s+x.qty,0);
+  let btn = document.getElementById('checkoutBtn');
+  if(total > 0 && !btn){
+    btn = document.createElement('button');
+    btn.id = 'checkoutBtn';
+    btn.className = 'btn primary';
+    btn.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:90;padding:14px 28px;box-shadow:0 10px 30px rgba(0,234,255,.4)';
+    btn.onclick = checkout;
+    document.body.appendChild(btn);
+  }
+  if(btn) btn.textContent = '🛒 Checkout (' + total + ') — ' + money(cart.reduce((s,x)=>s+x.price*x.qty,0));
+  if(total === 0 && btn) btn.remove();
+}, 500);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#05070d">
+<title>CYBER KING — MLBB Marketplace</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,sans-serif;
+  background:#04060b;color:#f5f8ff;min-height:100vh;
+  background-image:
+    radial-gradient(circle at 10% 0%,rgba(0,234,255,.15),transparent 35%),
+    radial-gradient(circle at 90% 5%,rgba(139,92,255,.15),transparent 35%);
+}
+.container{max-width:1100px;margin:0 auto;padding:0 14px}
+header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(4,6,11,.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:14px 0;
+}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{font-weight:900;letter-spacing:.5px;font-size:15px;display:flex;gap:10px;align-items:center}
+.logoMark{
+  width:38px;height:38px;border-radius:12px;
+  background:linear-gradient(135deg,#00eaff,#8b5cff);
+  display:grid;place-items:center;color:#021017;font-weight:1000;
+}
+button{cursor:pointer;border:0;font:inherit}
+.btn{
+  padding:10px 14px;border-radius:11px;
+  background:rgba(255,255,255,.06);color:#fff;
+  border:1px solid rgba(255,255,255,.1);font-size:13px;font-weight:600;
+}
+.primary{
+  background:linear-gradient(135deg,#00eaff,#9a7cff);
+  color:#021017;font-weight:900;
+}
+.hero{padding:50px 0 30px;text-align:center}
+h1{
+  font-size:clamp(36px,7vw,72px);line-height:1;
+  background:linear-gradient(100deg,#fff,#00eaff,#8b5cff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:14px;
+}
+.hero p{color:#98a6b8;max-width:520px;margin:0 auto;line-height:1.7}
+.section{padding:25px 0}
+.sectionHead{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;gap:10px}
+.sectionHead h2{font-size:22px}
+.sectionHead span{color:#748195;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card{
+  border-radius:16px;overflow:hidden;
+  background:rgba(13,20,32,.55);
+  border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(20px);
+  transition:.2s;
+}
+.card:hover{transform:translateY(-3px);border-color:rgba(0,234,255,.4)}
+.thumb{
+  height:130px;display:grid;place-items:center;font-size:40px;
+  background:radial-gradient(circle at 40% 40%,rgba(0,234,255,.15),transparent 40%),
+    linear-gradient(135deg,rgba(0,234,255,.08),rgba(139,92,255,.12));
+  position:relative;
+}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;top:8px;left:8px;font-size:9px;font-weight:900;color:#00eaff;background:rgba(2,8,15,.75);padding:4px 7px;border-radius:99px;letter-spacing:.5px}
+.body{padding:12px}
+.body h3{font-size:13px;margin-bottom:5px;line-height:1.3}
+.meta{color:#8190a3;font-size:10px;display:flex;gap:6px;flex-wrap:wrap}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:11px;gap:6px}
+.foot strong{color:#00eaff;font-size:13px}
+.buy{
+  padding:7px 10px;border-radius:8px;font-size:11px;font-weight:800;
+  background:rgba(0,234,255,.08);color:#8af5ff;
+  border:1px solid rgba(0,234,255,.2);
+}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.toolbar input,.toolbar select{
+  background:rgba(5,10,18,.55);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:10px;color:#fff;font-size:13px;outline:none;
+}
+.toolbar input{flex:1;min-width:180px}
+.toolbar input:focus,.toolbar select:focus{border-color:rgba(0,234,255,.5)}
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;
+  display:none;align-items:center;justify-content:center;padding:14px;
+  backdrop-filter:blur(10px);
+}
+.modal.open{display:flex}
+.modalBox{
+  width:min(500px,100%);max-height:88vh;overflow:auto;
+  background:rgba(8,13,22,.95);border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:20px;
+}
+.modalBox h2{margin-bottom:14px;font-size:19px}
+.field{
+  width:100%;padding:11px;margin-bottom:9px;
+  background:rgba(5,10,18,.55);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;color:#fff;font-size:13px;outline:none;
+}
+.field:focus{border-color:rgba(0,234,255,.5)}
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);
+  background:rgba(7,14,23,.95);padding:12px 18px;border-radius:12px;
+  border:1px solid rgba(0,234,255,.3);font-size:13px;font-weight:600;
+  opacity:0;pointer-events:none;transition:.25s;z-index:200;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.closeBtn{float:right;font-size:24px;background:none;color:#94a1b3;padding:0 6px}
+.empty{text-align:center;padding:30px;color:#78869a;grid-column:1/-1;font-size:13px}
+footer{text-align:center;padding:40px 14px;color:#5f6b7d;font-size:11px;border-top:1px solid rgba(255,255,255,.06);margin-top:40px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo"><span class="logoMark">CK</span> CYBER KING</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" onclick="openTrack()">📦 Track</button>
+      <button class="btn primary" onclick="openAdmin()">⚙ Admin</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero container">
+  <h1>LEVEL UP YOUR GAME</h1>
+  <p>MLBB Diamonds နဲ့ Account များကို လွယ်ကူစွာ ဝယ်ယူနိုင်သည်။</p>
+</section>
+
+<section class="section container">
+  <div class="sectionHead"><h2>💎 Diamonds</h2><span id="pCount"></span></div>
+  <div class="grid" id="diamondGrid"></div>
+</section>
+
+<section class="section container">
+  <div class="sectionHead"><h2>👤 Accounts</h2><span id="aCount"></span></div>
+  <div class="toolbar">
+    <input id="search" placeholder="Search accounts..." oninput="renderAccounts()">
+    <select id="rankFilter" onchange="renderAccounts()">
+      <option value="">All Ranks</option>
+      <option>Mythic</option>
+      <option>Mythical Honor</option>
+      <option>Mythical Glory</option>
+      <option>Mythical Immortal</option>
+    </select>
+  </div>
+  <div class="grid" id="accountGrid"></div>
+</section>
+
+<footer>© 2026 CYBER KING • Independent marketplace</footer>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modalBox" id="modalContent"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const money = n => 'MMK ' + Number(n||0).toLocaleString();
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+let products = [], accounts = [], cart = [];
+
+let toastTimer;
+function toast(text){
+  const el = $('toast');
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+async function loadData(){
+  try {
+    products = await (await fetch('/api/products')).json();
+    accounts = await (await fetch('/api/accounts')).json();
+    renderProducts();
+    renderAccounts();
+  } catch(err){ toast('Load failed'); }
+}
+
+function renderProducts(){
+  $('pCount').textContent = products.length + ' packages';
+  $('diamondGrid').innerHTML = products.map(p => `
+    <article class="card">
+      <div class="thumb"><span class="tag">DIAMOND</span>${esc(p.icon||'💎')}</div>
+      <div class="body">
+        <h3>${esc(p.name)}</h3>
+        <div class="meta">
+          <span>${esc(p.meta||'')}</span>
+          ${p.bonus ? `<span style="color:#35e58c">${esc(p.bonus)}</span>` : ''}
+        </div>
+        <div class="foot">
+          <strong>${money(p.price)}</strong>
+          <button class="buy" onclick='addCart(${JSON.stringify(p).replace(/'/g,"&#39;")})'>ADD</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function renderAccounts(){
+  const q = ($('search').value||'').toLowerCase();
+  const r = $('rankFilter').value;
+  const filtered = accounts.filter(a => {
+    if(r && a.rank !== r) return false;
+    if(q && !(a.name+a.rank+a.tag).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  $('aCount').textContent = filtered.length + ' listings';
+  if(!filtered.length){
+    $('accountGrid').innerHTML = '<div class="empty">No accounts found.</div>';
+    return;
+  }
+  $('accountGrid').innerHTML = filtered.map(a => `
+    <article class="card">
+      <div class="thumb">
+        <span class="tag">${esc(a.tag||'PRO')}</span>
+        ${a.image ? `<img src="${esc(a.image)}">` : '👤'}
+      </div>
+      <div class="body">
+        <h3>${esc(a.name)}</h3>
+        <div class="meta">
+          <span>🏆 ${esc(a.rank)}</span>
+          <span>🎨 ${a.skins} skins</span>
+        </div>
+        <div class="foot">
+          <strong>${money(a.price)}</strong>
+          <button class="buy" onclick='addCart(${JSON.stringify({
+            id:'acc-'+a.id, name:a.name, price:a.price, meta:a.rank+' • '+a.skins+' skins'
+          }).replace(/'/g,"&#39;")})'>BUY</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function addCart(item){
+  const found = cart.find(x => x.id === item.id);
+  if(found) found.qty++;
+  else cart.push({ ...item, qty:1 });
+  toast('Cart: ' + cart.reduce((s,x)=>s+x.qty,0) + ' items');
+}
+
+function openModal(html){ $('modalContent').innerHTML = html; $('modal').classList.add('open'); }
+function closeModal(){ $('modal').classList.remove('open'); }
+
+function openTrack(){
+  const last = localStorage.getItem('ck_last') || '';
+  openModal(`
+    <button class="closeBtn" onclick="closeModal()">×</button>
+    <h2>📦 Track Order</h2>
+    <input class="field" id="tid" placeholder="Order ID" value="${esc(last)}">
+    <button class="btn primary" style="width:100%" onclick="track()">Track</button>
+    <div id="tres" style="margin-top:14px"></div>
+  `);
+}
+
+async function track(){
+  const id = $('tid').value.trim();
+  if(!id) return toast('Enter Order ID');
+  const res = await fetch('/api/orders/' + id);
+  if(!res.ok){ $('tres').innerHTML = '<div class="empty">Not found</div>'; return; }
+  const o = await res.json();
+  $('tres').innerHTML = `
+    <div style="padding:12px;border-radius:12px;background:rgba(0,234,255,.06);border:1px solid rgba(0,234,255,.2)">
+      <b style="color:#00eaff">${esc(o.id)}</b><br>
+      Status: <b>${esc(o.status)}</b><br>
+      Total: <b>${money(o.total)}</b>
+    </div>
+  `;
+}
+
+function openAdmin(){
+  openModal(`
+    <button class="closeBtn" onclick="closeModal()">×</button>
+    <h2>⚙ Admin</h2>
+    <input class="field" id="apwd" type="password" placeholder="Admin password">
+    <button class="btn primary" style="width:100%" onclick="adminLogin()">Login</button>
+    <div id="aerr" style="color:#ff5577;font-size:12px;margin-top:8px"></div>
+    <p style="color:#78869a;font-size:11px;margin-top:12px">Password: admin123</p>
+  `);
+}
+
+async function adminLogin(){
+  const password = $('apwd').value;
+  const res = await fetch('/api/admin/login', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ password })
+  });
+  if(!res.ok){ $('aerr').textContent = 'Wrong password'; return; }
+  openAdminPanel();
+}
+
+async function openAdminPanel(){
+  const data = await (await fetch('/api/admin/data')).json();
+  openModal(`
+    <button class="closeBtn" onclick="closeModal()">×</button>
+    <h2>⚙ Admin Panel</h2>
+
+    <h3 style="margin:14px 0 8px;font-size:14px">Add Account</h3>
+    <input class="field" id="nName" placeholder="Name">
+    <input class="field" id="nPrice" type="number" placeholder="Price (MMK)">
+    <select class="field" id="nRank">
+      <option>Mythic</option>
+      <option>Mythical Honor</option>
+      <option>Mythical Glory</option>
+      <option>Mythical Immortal</option>
+    </select>
+    <input class="field" id="nSkins" type="number" placeholder="Skins">
+    <input class="field" id="nTag" placeholder="Tag (RARE, HOT...)">
+    <button class="btn primary" style="width:100%" onclick="addAccount()">Add</button>
+
+    <h3 style="margin:18px 0 8px;font-size:14px">Accounts (${data.accounts.length})</h3>
+    <div>
+      ${data.accounts.map(a => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px;border-radius:10px;background:rgba(255,255,255,.03);margin-bottom:6px;gap:10px">
+          <div style="min-width:0;flex:1">
+            <b style="font-size:12px;display:block">${esc(a.name)}</b>
+            <small style="color:#8996a8;font-size:10px">${money(a.price)} • ${esc(a.rank)}</small>
+          </div>
+          <button class="buy" onclick="delAccount(${a.id})">×</button>
+        </div>
+      `).join('')}
+    </div>
+
+    <h3 style="margin:18px 0 8px;font-size:14px">Orders (${data.orders.length})</h3>
+    <div>
+      ${data.orders.length ? data.orders.map(o => `
+        <div style="padding:10px;border-radius:10px;background:rgba(255,255,255,.03);margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;gap:8px;font-size:11px">
+            <b style="color:#00eaff">${esc(o.id)}</b>
+            <span>${esc(o.status)}</span>
+          </div>
+          <small style="color:#8996a8">${money(o.total)} • ${esc(o.buyer||'Guest')}</small>
+          <div style="display:flex;gap:5px;margin-top:6px">
+            <button class="buy" onclick="setStatus('${esc(o.id)}','Pending')">Pending</button>
+            <button class="buy" onclick="setStatus('${esc(o.id)}','Processing')">Processing</button>
+            <button class="buy" onclick="setStatus('${esc(o.id)}','Completed')">Done</button>
+          </div>
+        </div>
+      `).join('') : '<div class="empty">No orders</div>'}
+    </div>
+  `);
+}
+
+async function addAccount(){
+  const name = $('nName').value.trim();
+  const price = Number($('nPrice').value);
+  if(!name || !price) return toast('Fill name and price');
+  await fetch('/api/admin/accounts', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({
+      name, price,
+      rank: $('nRank').value,
+      skins: Number($('nSkins').value)||0,
+      tag: ($('nTag').value||'PRO').toUpperCase(),
+      desc: '', image: ''
+    })
+  });
+  toast('Account added ✓');
+  await loadData();
+  openAdminPanel();
+}
+
+async function delAccount(id){
+  if(!confirm('Delete?')) return;
+  await fetch('/api/admin/accounts/' + id, { method:'DELETE' });
+  toast('Deleted');
+  await loadData();
+  openAdminPanel();
+}
+
+async function setStatus(id, status){
+  await fetch('/api/admin/orders/' + id, {
+    method:'PATCH',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ status })
+  });
+  toast('Updated');
+  openAdminPanel();
+}
+
+async function checkout(){
+  if(!cart.length) return toast('Cart empty');
+  const name = prompt('Your name:');
+  if(!name) return;
+  const contact = prompt('Telegram username:');
+  if(!contact) return;
+
+  const total = cart.reduce((s,x)=>s + x.price*x.qty, 0);
+  const res = await fetch('/api/orders', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ buyer:name, contact, items:cart, total })
+  });
+  const data = await res.json();
+  if(data.ok){
+    localStorage.setItem('ck_last', data.orderId);
+    cart = [];
+    openModal(`
+      <div style="text-align:center;padding:20px">
+        <div style="font-size:44px;color:#35e58c">✓</div>
+        <h2 style="margin:10px 0">Order Created</h2>
+        <p style="color:#8290a2;font-size:12px">Order ID</p>
+        <h2 style="color:#00eaff;font-family:monospace;letter-spacing:1px">${esc(data.orderId)}</h2>
+        <button class="btn primary" style="width:100%;margin-top:14px" onclick="closeModal()">OK</button>
+      </div>
+    `);
+  }
+}
+
+setInterval(() => {
+  const total = cart.reduce((s,x)=>s+x.qty,0);
+  let btn = document.getElementById('checkoutBtn');
+  if(total > 0 && !btn){
+    btn = document.createElement('button');
+    btn.id = 'checkoutBtn';
+    btn.className = 'btn primary';
+    btn.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:90;padding:14px 28px;box-shadow:0 10px 30px rgba(0,234,255,.4)';
+    btn.onclick = checkout;
+    document.body.appendChild(btn);
+  }
+  if(btn) btn.textContent = '🛒 Checkout (' + total + ') — ' + money(cart.reduce((s,x)=>s+x.price*x.qty,0));
+  if(total === 0 && btn) btn.remove();
+}, 500);
+
+loadData();
+</script>
+</body>
+</html>
